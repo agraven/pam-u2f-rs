@@ -8,7 +8,7 @@ repository = "https://github.com/agraven/pam-u2f-rs"
 categories = ["authentication", "config", "parsing"]
 keywords = ["yubikey", "pam", "u2f"]
 license = "MPL-2.0"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 
 

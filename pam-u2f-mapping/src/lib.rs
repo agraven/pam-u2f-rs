@@ -12,6 +12,7 @@
 use std::str::FromStr;
 
 /// Represents the contents of a mapping file.
+#[derive(Clone, Debug)]
 pub struct MappingFile {
 	/// The list of mapping entries in the file
 	pub mappings: Vec<Mapping>,
@@ -21,9 +22,9 @@ pub struct MappingFile {
 #[derive(Clone, Debug)]
 pub struct Mapping {
 	/// The username the mapping applies to
-	user: String,
+	pub user: String,
 	/// The list of keys associated with the user
-	keys: Vec<Key>,
+	pub keys: Vec<Key>,
 }
 
 /// A key entry in a mapping file. Corresponds to one colon (:) separated entry in a mapping line.
@@ -61,19 +62,19 @@ impl std::str::FromStr for Mapping {
 		for field in fields {
 			let mut subfields = field.split(',');
 			// split will always yield at least one item
-			let data = subfields.next().unwrap();
-			let data2 = subfields.next().ok_or(Error::HandleMissing)?;
-			let kind = subfields.next().ok_or(Error::KindMissing)?;
-			let flags = subfields.next().ok_or(Error::FlagsMissing)?;
+			let public = subfields.next().unwrap().to_owned();
+			let handle = subfields.next().ok_or(Error::HandleMissing)?.to_owned();
+			let kind = subfields.next().ok_or(Error::KindMissing)?.to_owned();
+			let flags = subfields.next().ok_or(Error::FlagsMissing)?.to_owned();
 			let mut flags = flags.split('+');
 			if flags.next() != Some("") {
 				return Err(Error::BadFlags);
 			}
 			let flags = flags.map(|s| s.to_owned()).collect::<Vec<_>>();
 			keys.push(Key {
-				handle: data.to_owned(),
-				public: data2.to_owned(),
-				kind: kind.to_owned(),
+				public,
+				handle,
+				kind,
 				flags,
 			})
 		}
