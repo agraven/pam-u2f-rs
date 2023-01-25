@@ -84,6 +84,19 @@ impl std::str::FromStr for Mapping {
 	}
 }
 
+/// Flags set for a given key, such as whether to perform PIN entry
+#[derive(Debug, Clone)]
+pub enum Flag {
+	/// Whether PIN entry should be performed
+	Pin,
+	/// Whether presence verification should be performed
+	Presence,
+	/// Whether user verification should be performed
+	Verification,
+	/// Unknown flag
+	Unknown(String),
+}
+
 impl std::fmt::Display for Mapping {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		write!(f, "{}", self.user)?;
